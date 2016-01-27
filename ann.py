@@ -4,19 +4,21 @@ import sys
 import numpy
 from data_point import *
 
-def readFileToDataPoint(filename):
-	datalist = []
+def readFile(filename):
+	input = []
+	output = []
 	
 	try:
 		with open(filename, 'r') as f:
 			for line in f:
-				input = line.split()
-				datalist.append(data_point(input[0], input[1], input[2]))
+				data = line.split()
+				input.append([data[0], data[1]])
+				output.append(data[2])
 	except FileNotFoundError as ex:
 		print(filename, " could not be found.")
 		exit()
 	
-	return datalist
+	return input, output
 
 def parseInput(args):
 	if len(args) is 2:
@@ -49,10 +51,15 @@ def parseInput(args):
 def sigmoidFunction(output):
 	return 0
 	
+layer = ['input', 'hidden', 'output']
+list(enumerate(layer))
 
 # get input into 3 variables	
 filename, nodes, holdout = parseInput(sys.argv)
 
 # create list of data point objects from file
-data = readFileToDataPoint(filename)
+input, output = readFile(filename)
+
+
+print(input)
 
