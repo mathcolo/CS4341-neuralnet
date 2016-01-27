@@ -2,7 +2,7 @@
 
 import sys
 import numpy
-from data_point import *
+from node import *
 
 def readFile(filename):
 	input = []
@@ -48,18 +48,41 @@ def parseInput(args):
 	
 	return args[1], nodes, holdout
 
-def sigmoidFunction(output):
-	return 0
+def sigmoidFunction(input):
+	#Function as taken from the textbook
+	return 1/(1+np.exp(-1*input))
 	
 layer = ['input', 'hidden', 'output']
 list(enumerate(layer))
 
 # get input into 3 variables	
-filename, nodes, holdout = parseInput(sys.argv)
+filename, numHidden, holdout = parseInput(sys.argv)
 
 # create list of data point objects from file
 input, output = readFile(filename)
-
-
 print(input)
 
+numInput = 2
+#numHidden ^
+numOutput = 2
+
+nodesInput = []
+for i in xrange(0,numInput):
+	nodesInput.append(Node([], Node.i))
+
+nodesHidden = []
+for i in xrange(0,numHidden):
+	thisNode = Node([], Node.h)
+	nodesHidden.append(thisNode)
+	for node in nodesInput:
+		node.fPtr.append((i,numpy.random.ranf()))
+
+nodesOutput = []
+for i in xrange(0,numOutput):
+	thisNode = Node([], Node.o)
+	nodesOutput.append(thisNode)
+	for node in nodesHidden:
+		node.fPtr.append((i,numpy.random.ranf()))
+
+
+print(nodesHidden[0])
