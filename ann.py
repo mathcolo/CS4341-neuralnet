@@ -1,6 +1,7 @@
 # ann.py
 
 import sys
+import numpy
 from data_point import *
 
 def readFileToDataPoint(filename):
@@ -44,6 +45,10 @@ def parseInput(args):
 		print("Incorrect usage. Proper usage is python file.txt [ nodes | holdout percentage ]")
 	
 	return args[1], nodes, holdout
+
+def sigmoidFunction(output):
+	return 0
+	
 
 # get input into 3 variables	
 filename, nodes, holdout = parseInput(sys.argv)
