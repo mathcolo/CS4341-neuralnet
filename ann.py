@@ -12,6 +12,7 @@ def readFileToDataPoint(filename):
 				input = line.split()
 				datalist.append(data_point(input[0], input[1], input[2]))
 	except FileNotFoundError as ex:
+		print(filename, " could not be found.")
 		exit()
 	
 	return datalist
@@ -19,7 +20,7 @@ def readFileToDataPoint(filename):
 def parseInput(args):
 	if len(args) is 2:
 		print("test")
-		return
+		return args[1], 5, 20
 
 	elif len(args) is 4:
 		try:
