@@ -3,6 +3,7 @@
 import sys
 import numpy
 from node import *
+from synapse import *
 
 def readFile(filename):
 	input = []
@@ -12,8 +13,8 @@ def readFile(filename):
 		with open(filename, 'r') as f:
 			for line in f:
 				data = line.split()
-				input.append([data[0], data[1]])
-				output.append(data[2])
+				input.append([float(data[0]), float(data[1])])
+				output.append(float(data[2]))
 	except FileNotFoundError as ex:
 		print(filename, " could not be found.")
 		exit()
@@ -48,10 +49,14 @@ def parseInput(args):
 	
 	return args[1], nodes, holdout
 
-def sigmoidFunction(input):
+def sigmoid(input):
 	#Function as taken from the textbook
-	return 1/(1+np.exp(-1*input))
-	
+	return 1/(1+numpy.exp(-1*input))
+
+def sigmoidDeriv(input):
+	return input * (1 - input);
+
+
 layer = ['input', 'hidden', 'output']
 list(enumerate(layer))
 
@@ -60,29 +65,79 @@ filename, numHidden, holdout = parseInput(sys.argv)
 
 # create list of data point objects from file
 input, output = readFile(filename)
-print(input)
+#print(input)
 
 numInput = 2
 #numHidden ^
-numOutput = 2
+numOutput = 1
 
 nodesInput = []
-for i in xrange(0,numInput):
-	nodesInput.append(Node([], Node.i))
+for i in range(0,numInput):
+	nodesInput.append(Node(Node.i))
 
 nodesHidden = []
-for i in xrange(0,numHidden):
-	thisNode = Node([], Node.h)
+for i in range(0,numHidden):
+	thisNode = Node(Node.h)
 	nodesHidden.append(thisNode)
 	for node in nodesInput:
-		node.fPtr.append((i,numpy.random.ranf()))
+		synapse = Synapse(numpy.random.ranf(), node, thisNode)
+		node.synapses.append(synapse)
+		thisNode.synapses.append(synapse)
 
 nodesOutput = []
-for i in xrange(0,numOutput):
-	thisNode = Node([], Node.o)
+for i in range(0,numOutput):
+	thisNode = Node(Node.o)
 	nodesOutput.append(thisNode)
 	for node in nodesHidden:
-		node.fPtr.append((i,numpy.random.ranf()))
+		synapse = Synapse(numpy.random.ranf(), node, thisNode)
+		node.synapses.append(synapse)
+		thisNode.synapses.append(synapse)
+
+def classify(input, nodesInput, nodesHidden, nodesOutput):
+	for i in range(0,len(input)):
+		nodesInput[i].value = input[i]
+
+	#Input to Hidden
+	for node in nodesInput:
+		for synapse in node.synapses:
+			destination = synapse.node_d
+			destination.value += node.value * synapse.weight
+	
+	#Hidden to Output
+	for node in nodesHidden:
+		node.value = sigmoid(node.value)
+
+		for synapse in node.synapses:
+			if synapse.node_s is node:
+				destination = synapse.node_d
+				destination.value += node.value * synapse.weight
+
+	for node in nodesOutput:
+		node.value = sigmoid(node.value)
+		node.value = int(round(node.value))
+		print(node)
 
 
-print(nodesHidden[0])
+def backPropagation(output, outputClassify, nodesInput, nodesHidden, nodesOutput):
+
+	error = []
+	for i in range(0, len(output)):
+		error.append(output[i] - outputClassify[i])
+
+	error = map(sigmoidDeriv, error)
+
+
+	#Hidden Layer
+	errorHidden = []
+	for node in nodesHidden:
+		for synapse in node.synapses:
+			if synapse.node_s is node:
+				
+
+
+
+
+
+# for line in input:
+# 	#print(line)
+# 	classify(line, nodesInput, nodesHidden, nodesOutput)

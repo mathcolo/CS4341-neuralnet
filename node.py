@@ -4,25 +4,34 @@ class Node:
 	h = 2
 	o = 3
 
-	def __init__(self, fPtr, layer):
-		self.fPtr = fPtr
+	def __init__(self, layer):
+		self.synapses = []
 		self.layer = layer
+		self.value = 0.0
 		
 	@property
-	def fPtr(self):
-		return self._fPtr
+	def synapses(self):
+		return self._synapses
 		
 	@property
 	def layer(self):
 		return self._layer
+
+	@property
+	def value(self):
+	    return self._value	
 		
-	@fPtr.setter
-	def fPtr(self, value):
-		self._fPtr = value
+	@synapses.setter
+	def synapses(self, value):
+		self._synapses = value
 		
 	@layer.setter
 	def layer(self, value):
 		self._layer = value
 
+	@value.setter
+	def value(self, value):
+		self._value = value
+
 	def __str__(self):
-		return "Node(" + str(self.fPtr) + ", " + str(self.layer) + ")"
+		return "Node(" + str(self.layer) + ", " + str(self.value) + ")"
