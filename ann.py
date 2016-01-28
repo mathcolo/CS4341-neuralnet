@@ -71,27 +71,61 @@ numInput = 2
 #numHidden ^
 numOutput = 1
 
-nodesInput = []
-for i in range(0,numInput):
-	nodesInput.append(Node(Node.i))
+def setup(numInput, numHidden, numOutput):
 
-nodesHidden = []
-for i in range(0,numHidden):
-	thisNode = Node(Node.h)
-	nodesHidden.append(thisNode)
-	for node in nodesInput:
-		synapse = Synapse(numpy.random.ranf(), node, thisNode)
-		node.synapses.append(synapse)
-		thisNode.synapses.append(synapse)
+	nodesInput = []
+	nodesHidden = []
+	nodesOutput = []
 
-nodesOutput = []
-for i in range(0,numOutput):
-	thisNode = Node(Node.o)
-	nodesOutput.append(thisNode)
-	for node in nodesHidden:
-		synapse = Synapse(numpy.random.ranf(), node, thisNode)
-		node.synapses.append(synapse)
-		thisNode.synapses.append(synapse)
+	for i in range(0,numInput):
+		nodesInput.append(Node(Node.i))
+
+	for i in range(0,numHidden):
+		thisNode = Node(Node.h)
+		nodesHidden.append(thisNode)
+		for node in nodesInput:
+			synapse = Synapse(numpy.random.ranf(), node, thisNode)
+			node.synapses.append(synapse)
+			thisNode.synapses.append(synapse)
+
+
+	for i in range(0,numOutput):
+		thisNode = Node(Node.o)
+		nodesOutput.append(thisNode)
+		for node in nodesHidden:
+			synapse = Synapse(numpy.random.ranf(), node, thisNode)
+			node.synapses.append(synapse)
+			thisNode.synapses.append(synapse)
+
+	return nodesInput, nodesHidden, nodesOutput
+
+# nodesInput = []
+# for i in range(0,numInput):
+# 	nodesInput.append(Node(Node.i))
+
+# nodesHidden = []
+# for i in range(0,numHidden):
+# 	thisNode = Node(Node.h)
+# 	nodesHidden.append(thisNode)
+# 	for node in nodesInput:
+# 		synapse = Synapse(numpy.random.ranf(), node, thisNode)
+# 		node.synapses.append(synapse)
+# 		thisNode.synapses.append(synapse)
+
+# nodesOutput = []
+# for i in range(0,numOutput):
+# 	thisNode = Node(Node.o)
+# 	nodesOutput.append(thisNode)
+# 	for node in nodesHidden:
+# 		synapse = Synapse(numpy.random.ranf(), node, thisNode)
+# 		node.synapses.append(synapse)
+# 		thisNode.synapses.append(synapse)
+
+nodesInput, nodesHidden, nodesOutput = setup(numInput, numHidden, numOutput)
+
+
+
+
 
 def classify(input, nodesInput, nodesHidden, nodesOutput):
 	for i in range(0,len(input)):
@@ -130,9 +164,10 @@ def backPropagation(output, outputClassify, nodesInput, nodesHidden, nodesOutput
 	#Hidden Layer
 	errorHidden = []
 	for node in nodesHidden:
+		sum = 0.0
 		for synapse in node.synapses:
 			if synapse.node_s is node:
-				
+				sum += synapse.weight * error
 
 
 
