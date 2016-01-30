@@ -4,6 +4,7 @@ import sys
 import numpy
 from node import *
 from synapse import *
+from NeuralNetwork import *
 
 def readFile(filename):
 	input = []
@@ -49,17 +50,6 @@ def parseInput(args):
 	
 	return args[1], nodes, holdout
 
-def sigmoid(input):
-	#Function as taken from the textbook
-	return 1/(1+numpy.exp(-1*input))
-
-def sigmoidDeriv(input):
-	return input * (1 - input);
-
-
-layer = ['input', 'hidden', 'output']
-list(enumerate(layer))
-
 # get input into 3 variables	
 filename, numHidden, holdout = parseInput(sys.argv)
 
@@ -71,107 +61,19 @@ numInput = 2
 #numHidden ^
 numOutput = 1
 
-def setup(numInput, numHidden, numOutput):
+ann = NeuralNetwork(numInput, numHidden, numOutput)
 
-	nodesInput = []
-	nodesHidden = []
-	nodesOutput = []
+ann.setup()
 
-	for i in range(0,numInput):
-		nodesInput.append(Node(Node.i))
-
-	for i in range(0,numHidden):
-		thisNode = Node(Node.h)
-		nodesHidden.append(thisNode)
-		for node in nodesInput:
-			synapse = Synapse(numpy.random.ranf(), node, thisNode)
-			node.synapses.append(synapse)
-			thisNode.synapses.append(synapse)
+#ann.classify(input[0])
+for x in range(0,3000):
+	if x == 2999:
+		print(ann.backPropagation(input, output))
+	else:
+		ann.backPropagation(input, output)
 
 
-	for i in range(0,numOutput):
-		thisNode = Node(Node.o)
-		nodesOutput.append(thisNode)
-		for node in nodesHidden:
-			synapse = Synapse(numpy.random.ranf(), node, thisNode)
-			node.synapses.append(synapse)
-			thisNode.synapses.append(synapse)
-
-	return nodesInput, nodesHidden, nodesOutput
-
-# nodesInput = []
-# for i in range(0,numInput):
-# 	nodesInput.append(Node(Node.i))
-
-# nodesHidden = []
-# for i in range(0,numHidden):
-# 	thisNode = Node(Node.h)
-# 	nodesHidden.append(thisNode)
-# 	for node in nodesInput:
-# 		synapse = Synapse(numpy.random.ranf(), node, thisNode)
-# 		node.synapses.append(synapse)
-# 		thisNode.synapses.append(synapse)
-
-# nodesOutput = []
-# for i in range(0,numOutput):
-# 	thisNode = Node(Node.o)
-# 	nodesOutput.append(thisNode)
-# 	for node in nodesHidden:
-# 		synapse = Synapse(numpy.random.ranf(), node, thisNode)
-# 		node.synapses.append(synapse)
-# 		thisNode.synapses.append(synapse)
-
-nodesInput, nodesHidden, nodesOutput = setup(numInput, numHidden, numOutput)
-
-
-
-
-
-def classify(input, nodesInput, nodesHidden, nodesOutput):
-	for i in range(0,len(input)):
-		nodesInput[i].value = input[i]
-
-	#Input to Hidden
-	for node in nodesInput:
-		for synapse in node.synapses:
-			destination = synapse.node_d
-			destination.value += node.value * synapse.weight
 	
-	#Hidden to Output
-	for node in nodesHidden:
-		node.value = sigmoid(node.value)
-
-		for synapse in node.synapses:
-			if synapse.node_s is node:
-				destination = synapse.node_d
-				destination.value += node.value * synapse.weight
-
-	for node in nodesOutput:
-		node.value = sigmoid(node.value)
-		node.value = int(round(node.value))
-		print(node)
-
-
-def backPropagation(output, outputClassify, nodesInput, nodesHidden, nodesOutput):
-
-	error = []
-	for i in range(0, len(output)):
-		error.append(output[i] - outputClassify[i])
-
-	error = map(sigmoidDeriv, error)
-
-
-	#Hidden Layer
-	errorHidden = []
-	for node in nodesHidden:
-		sum = 0.0
-		for synapse in node.synapses:
-			if synapse.node_s is node:
-				sum += synapse.weight * error
-
-
-
-
 
 # for line in input:
 # 	#print(line)
