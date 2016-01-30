@@ -65,14 +65,8 @@ ann = NeuralNetwork(numInput, numHidden, numOutput)
 
 ann.setup()
 
-#ann.classify(input[0])
-for x in range(0,3000):
-	if x == 2999:
-		print(ann.backPropagation(input, output))
-	else:
-		ann.backPropagation(input, output)
-
-
+for x in range(0,1000):
+	ann.backPropagation(input, output, .0002)
 	
 
 # for line in input:

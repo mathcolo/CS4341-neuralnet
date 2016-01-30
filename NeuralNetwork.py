@@ -1,6 +1,7 @@
 from node import *
 from synapse import *
 import numpy
+import matplotlib.pyplot as plt
 
 def sigmoid(input):
 	#Function as taken from the textbook
@@ -61,17 +62,16 @@ class NeuralNetwork:
 
 		for node in self.nodesOutput:
 			node.value = sigmoid(node.value)
-			#node.value = int(round(node.value))
+			node.value = int(round(node.value))
 
 		return node.value
 
-	def backPropagation(self, input, output):
-
+	def backPropagation(self, input, output, training_rate):
 		for i in range(0,len(input)):
 			classification = self.classify(input[i])
 
 			errorPerPair = output[i] - classification
-
+			
 			#For each synapse going from hidden to the single output node
 
 			errorPerSynapse = []
@@ -95,16 +95,25 @@ class NeuralNetwork:
 				for o in range(0,len(self.nodesOutput)):
 					adjustment = errorPerSynapse[o] * self.nodesOutput[o].value
 
-					self.nodesOutput[o].value -= 1 * adjustment
+					self.nodesOutput[o].value -= training_rate * adjustment
 
 			for iNode in range(0,len(self.nodesInput)):
 				for hNode in range(0,len(self.nodesHidden)):
 					adjustment = errorHidden[hNode] * self.nodesInput[iNode].value
 
-					self.nodesInput[iNode].value -= 1 * adjustment
+					self.nodesInput[iNode].value -= training_rate * adjustment
 
 			squaredError = 0.0
+			percent = 0
 			for item in range(0,len(output)):
+				if (output[item] == self.classify(input[item])):
+					plt.plot([input[item][0]], [input[item][1]], 'bo')
+					percent += 1
+				else:
+					plt.plot([input[item][0]], [input[item][1]], 'ro')
 				squaredError += 0.5*(output[item] - self.classify(input[item])) ** 2
 
+			print(percent/len(input))
+			plt.show()
+				
 			return squaredError
