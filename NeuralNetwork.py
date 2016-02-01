@@ -78,6 +78,20 @@ class NeuralNetwork:
 
 		for node in self.nodesOutput:
 			node.value = 0.0
+			
+	def calculateError(self, input, output):
+		squaredError = 0.0
+		percent = 0
+		for item in range(0,len(output)):
+			if (output[item] != round(self.classify(input[item]))):
+				#plt.plot([input[item][0]], [input[item][1]], 'bo')
+				#percent += 1
+				percent +=1
+			#else:
+			#	percent +=1
+				#plt.plot([input[item][0]], [input[item][1]], 'ro')
+				#squaredError += 0.5*(output[item] - self.classify(input[item])) ** 2
+		return percent/len(output)
 
 	def backPropagation(self, input, output, training_rate):
 		for i in range(0,len(input)):
@@ -119,8 +133,9 @@ class NeuralNetwork:
 
 			for hNode in self.nodesHidden:
 				for syn in range(0,len(hNode.synapses)):
-					adjustment = errorHidden[syn] * hNode.synapses[syn].weight
-					hNode.synapses[syn].weight -= training_rate * adjustment
+					if hNode.synapses[syn].node_d is hNode:
+						adjustment = errorHidden[syn] * hNode.synapses[syn].weight
+						hNode.synapses[syn].weight -= training_rate * adjustment
 
 
 
@@ -129,19 +144,7 @@ class NeuralNetwork:
 			# 		adjustment = errorHidden[hNode] * self.nodesInput[iNode].value
 
 			# 		self.nodesInput[iNode].weight -= training_rate * adjustment
-
-			squaredError = 0.0
-			percent = 0
-			for item in range(0,len(output)):
-				if (output[item] == round(self.classify(input[item]))):
-					#plt.plot([input[item][0]], [input[item][1]], 'bo')
-					percent += 1
-				else:
-					pass
-					#plt.plot([input[item][0]], [input[item][1]], 'ro')
-				squaredError += 0.5*(output[item] - self.classify(input[item])) ** 2
-
 		#print()
 		#plt.show()
-				
-		return percent/len(input)
+		#print(self.calculateError(input, output))
+		return 

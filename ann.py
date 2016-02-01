@@ -18,13 +18,12 @@ def readFile(filename):
 				output.append(float(data[2]))
 	except FileNotFoundError as ex:
 		print(filename, " could not be found.")
-		exit()
+		sys.exit()
 	
 	return input, output
 
 def parseInput(args):
 	if len(args) is 2:
-		print("test")
 		return args[1], 5, 20
 
 	elif len(args) is 4:
@@ -47,6 +46,7 @@ def parseInput(args):
 			print("Holdout pecentage must be a non-negative integer.")		
 	else:
 		print("Incorrect usage. Proper usage is python file.txt [ nodes | holdout percentage ]")
+		sys.exit()
 	
 	return args[1], nodes, holdout
 
@@ -61,12 +61,20 @@ numInput = 2
 #numHidden ^
 numOutput = 1
 
+h_percent = holdout/100
+h_num = int(round(len(input)*h_percent))
+
 ann = NeuralNetwork(numInput, numHidden, numOutput)
 
 ann.setup()
 
-for x in range(0,1000):
-	print(ann.backPropagation(input, output, 1))
+# run backprop to train the network with the training set
+for x in range(0,2000):
+	ann.backPropagation(input[0:h_num], output[0:h_num], 1)
+	
+# test against rest of data
+print(round(ann.calculateError(input[h_num+1:len(input)-1],output[h_num+1:len(output)-1])*100, 3), "% error")
+	
 	
 
 # for line in input:
