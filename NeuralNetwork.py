@@ -153,3 +153,17 @@ class NeuralNetwork:
 		#plt.show()
 		print(self.calculateError(input, output))
 		return 
+
+		
+	def printNetwork(self):
+
+		print("Left Synapses:")
+		for node in self.nodesHidden:
+				for syn in range(0,len(node.synapses)):
+					if node.synapses[syn].node_d is node:
+						print(node.synapses[syn])
+
+		print("Right Synapses:")
+		for node in self.nodesOutput:
+				for syn in range(0,len(node.synapses)):
+						print(node.synapses[syn])
