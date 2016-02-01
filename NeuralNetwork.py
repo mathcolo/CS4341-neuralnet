@@ -28,7 +28,7 @@ class NeuralNetwork:
 			thisNode = Node(Node.h)
 			self.nodesHidden.append(thisNode)
 			for node in self.nodesInput:
-				synapse = Synapse(numpy.random.ranf(), node, thisNode)
+				synapse = Synapse((numpy.random.ranf()*2)-1, node, thisNode)
 				node.synapses.append(synapse)
 				thisNode.synapses.append(synapse)
 
@@ -37,18 +37,21 @@ class NeuralNetwork:
 			thisNode = Node(Node.o)
 			self.nodesOutput.append(thisNode)
 			for node in self.nodesHidden:
-				synapse = Synapse(numpy.random.ranf(), node, thisNode)
+				synapse = Synapse((numpy.random.ranf()*2)-1, node, thisNode)
 				node.synapses.append(synapse)
 				thisNode.synapses.append(synapse)
 
 	def classify(self, input):
+
+		self.resetNodes()
+
 		for i in range(0,len(input)):
 			self.nodesInput[i].value = input[i]
 
 		#Input to Hidden
 		for node in self.nodesInput:
 			for synapse in node.synapses:
-				destination = synapse.node_d
+				destination = synapse.node_d #A hidden node
 				destination.value += node.value * synapse.weight
 		
 		#Hidden to Output
@@ -62,22 +65,32 @@ class NeuralNetwork:
 
 		for node in self.nodesOutput:
 			node.value = sigmoid(node.value)
-			node.value = int(round(node.value))
+			#node.value = round(node.value)
 
 		return node.value
+
+	def resetNodes(self):
+		for node in self.nodesInput:
+			node.value = 0.0
+
+		for node in self.nodesHidden:
+			node.value = 0.0
+
+		for node in self.nodesOutput:
+			node.value = 0.0
 
 	def backPropagation(self, input, output, training_rate):
 		for i in range(0,len(input)):
 			classification = self.classify(input[i])
 
-			errorPerPair = output[i] - classification
-			
+			errorPerPair = (output[i] - classification)
+
 			#For each synapse going from hidden to the single output node
 			errorPerSynapse = []
 			for j in range(0,len(self.nodesOutput[0].synapses)):
+				#print("self.nodesOutput[0].value: ",self.nodesOutput[0].value)
+				#print("sigmoidDeriv(self.nodesOutput[0].value): ",sigmoidDeriv(self.nodesOutput[0].value))
 				errorPerSynapse.append(sigmoidDeriv(self.nodesOutput[0].value) * errorPerPair)
-
-			#print(errorPerSynapse)
 
 			#Hidden Layer
 			errorHidden = []
@@ -89,29 +102,46 @@ class NeuralNetwork:
 				errorHidden.append(sigmoidDeriv(node.value) * sum)
 			#print(errorHidden)
 
-			for h in range(0,len(self.nodesHidden)):
-				for o in range(0,len(self.nodesOutput)):
-					adjustment = errorPerSynapse[o] * self.nodesOutput[o].value
+			for node in self.nodesHidden:
+				for syn in range(0,len(node.synapses)):
+					if node.synapses[syn].node_s is node:
+						#print("STARTING AT",node.synapses[syn].weight)
+						adjustment = errorPerSynapse[syn] * node.synapses[syn].weight
+						node.synapses[syn].weight -= training_rate * adjustment
+						#print("CHANGED BY ",(training_rate * adjustment))
 
-					self.nodesOutput[o].value -= training_rate * adjustment
 
-			for iNode in range(0,len(self.nodesInput)):
-				for hNode in range(0,len(self.nodesHidden)):
-					adjustment = errorHidden[hNode] * self.nodesInput[iNode].value
+			# for h in range(0,len(self.nodesHidden)):
+			# 	for o in range(0,len(self.nodesOutput)):
+			# 		adjustment = errorPerSynapse[o] * self.nodesOutput[o].value
 
-					self.nodesInput[iNode].value -= training_rate * adjustment
+			# 		self.nodesOutput[o].value -= training_rate * adjustment
+
+			for hNode in self.nodesHidden:
+				for syn in range(0,len(hNode.synapses)):
+					adjustment = errorHidden[syn] * hNode.synapses[syn].weight
+					hNode.synapses[syn].weight -= training_rate * adjustment
+
+
+
+			# for iNode in range(0,len(self.nodesInput)):
+			# 	for hNode in range(0,len(self.nodesHidden)):
+			# 		adjustment = errorHidden[hNode] * self.nodesInput[iNode].value
+
+			# 		self.nodesInput[iNode].weight -= training_rate * adjustment
 
 			squaredError = 0.0
 			percent = 0
 			for item in range(0,len(output)):
-				if (output[item] == self.classify(input[item])):
-					plt.plot([input[item][0]], [input[item][1]], 'bo')
+				if (output[item] == round(self.classify(input[item]))):
+					#plt.plot([input[item][0]], [input[item][1]], 'bo')
 					percent += 1
 				else:
-					plt.plot([input[item][0]], [input[item][1]], 'ro')
+					pass
+					#plt.plot([input[item][0]], [input[item][1]], 'ro')
 				squaredError += 0.5*(output[item] - self.classify(input[item])) ** 2
 
-		print(percent/len(input))
-		plt.show()
+		#print()
+		#plt.show()
 				
-		return squaredError
+		return percent/len(input)

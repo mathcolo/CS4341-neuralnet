@@ -66,7 +66,7 @@ ann = NeuralNetwork(numInput, numHidden, numOutput)
 ann.setup()
 
 for x in range(0,1000):
-	ann.backPropagation(input, output, .0002)
+	print(ann.backPropagation(input, output, 1))
 	
 
 # for line in input:

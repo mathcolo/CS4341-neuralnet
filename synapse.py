@@ -32,5 +32,5 @@ class Synapse:
 		self._node_s = value
 
 	def __str__(self):
-		return "Synapse(" + str(self.weight) + ", " + str(self.node_d) + ", " + str(self.node_s) + ")"
+		return "Synapse(" + str(self.weight) + ", " + str(self.node_s) + ", " + str(self.node_d) + ")"
 
