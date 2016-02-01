@@ -1,4 +1,7 @@
-#synapse.py
+# CS4341 Intro to AI (C16): Project 2
+# Theresa Inzerillo and Preston Mueller
+# February 1, 2016
+# synapse.py: synapse class for the network--connects two nodes
 
 class Synapse:
 

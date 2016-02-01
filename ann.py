@@ -1,4 +1,7 @@
-# ann.py
+# CS4341 Intro to AI (C16): Project 2
+# Theresa Inzerillo and Preston Mueller
+# February 1, 2016
+# ann.py: driver/main file for the neural network project
 
 import sys
 import numpy
@@ -26,32 +29,37 @@ def parseInput(args):
 	if len(args) is 2:
 		return args[1], 5, 20
 
-	elif len(args) is 4:
-		try:
-			nodes = int(args[2])
-		except ValueError as ex:
-			print("error: ", args[2], " is not a valid integer.")
-			exit()
-			
-		try:
-			holdout = int(args[3])
-		except ValueError as ex:
-			print("error: ", args[3], " is not a valid integer.")
-			exit()
+	else:
+		nodes = 5
+		holdout = 20
+
+		for i in range(0,len(args)):
+			try:
+				if str(args[i]) == "h":
+					nodes = int(args[i+1])
+					i += 1
+				if str(args[i]) == "p":
+					holdout = int(args[i+1])
+					i += 1
+			except:
+				print("Invalid input")
+				exit()
 
 		if nodes < 0:
 			print("Number of hidden nodes must be a non-negative integer.")
+			exit()
 		
 		if holdout < 0 or holdout > 100:
-			print("Holdout pecentage must be a non-negative integer.")		
-	else:
-		print("Incorrect usage. Proper usage is python file.txt [ nodes | holdout percentage ]")
-		sys.exit()
-	
+			print("Holdout pecentage must be a non-negative integer.")
+			exit()
+
 	return args[1], nodes, holdout
 
 # get input into 3 variables	
 filename, numHidden, holdout = parseInput(sys.argv)
+
+print(filename,numHidden,holdout)
+exit()
 
 # create list of data point objects from file
 input, output = readFile(filename)

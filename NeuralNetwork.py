@@ -1,3 +1,8 @@
+# CS4341 Intro to AI (C16): Project 2
+# Theresa Inzerillo and Preston Mueller
+# February 1, 2016
+# NeuralNetwork.py: core of the neural net
+
 from node import *
 from synapse import *
 import numpy

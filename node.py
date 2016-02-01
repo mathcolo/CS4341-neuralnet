@@ -1,3 +1,8 @@
+# CS4341 Intro to AI (C16): Project 2
+# Theresa Inzerillo and Preston Mueller
+# February 1, 2016
+# node.py: node class for the neural net
+
 class Node:	
 
 	i = 1
