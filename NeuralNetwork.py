@@ -133,9 +133,9 @@ class NeuralNetwork:
 
 			for hNode in self.nodesHidden:
 				for syn in range(0,len(hNode.synapses)):
-					if hNode.synapses[syn].node_d is hNode:
-						adjustment = errorHidden[syn] * hNode.synapses[syn].weight
-						hNode.synapses[syn].weight -= training_rate * adjustment
+					#if hNode.synapses[syn].node_d is hNode:
+					adjustment = errorHidden[syn] * hNode.synapses[syn].weight
+					hNode.synapses[syn].weight -= training_rate * adjustment
 
 
 
@@ -146,5 +146,5 @@ class NeuralNetwork:
 			# 		self.nodesInput[iNode].weight -= training_rate * adjustment
 		#print()
 		#plt.show()
-		#print(self.calculateError(input, output))
+		print(self.calculateError(input, output))
 		return 
