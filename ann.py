@@ -58,9 +58,6 @@ def parseInput(args):
 # get input into 3 variables	
 filename, numHidden, holdout = parseInput(sys.argv)
 
-print(filename,numHidden,holdout)
-exit()
-
 # create list of data point objects from file
 input, output = readFile(filename)
 #print(input)
@@ -78,7 +75,7 @@ ann.setup()
 
 # run backprop to train the network with the training set
 for x in range(0,2000):
-	ann.backPropagation(input[0:h_num], output[0:h_num], .001)
+	ann.backPropagation(input[0:h_num], output[0:h_num], 1)
 	
 # test against rest of data
 print(round(ann.calculateError(input[h_num+1:len(input)-1],output[h_num+1:len(output)-1])*100, 3), "% error")

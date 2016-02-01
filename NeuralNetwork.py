@@ -116,14 +116,14 @@ class NeuralNetwork:
 			for node in self.nodesHidden:
 				sum = 0.0
 				for syn in range(0,len(node.synapses)):
-					if node.synapses[syn].node_s is node:
-						sum += node.synapses[syn].weight * errorPerSynapse[syn]
+					if node.synapses[syn].node_d is node:
+						sum += node.synapses[syn].weight * sigmoidDeriv(node.synapses[syn].node_d.value) * errorPerPair
 				errorHidden.append(sigmoidDeriv(node.value) * sum)
 			#print(errorHidden)
 
-			for node in self.nodesHidden:
+			for node in self.nodesOutput:
 				for syn in range(0,len(node.synapses)):
-					if node.synapses[syn].node_s is node:
+					if node.synapses[syn].node_d is node:
 						#print("STARTING AT",node.synapses[syn].weight)
 						adjustment = errorPerSynapse[syn] * node.synapses[syn].weight
 						node.synapses[syn].weight -= training_rate * adjustment
@@ -138,9 +138,9 @@ class NeuralNetwork:
 
 			for hNode in self.nodesHidden:
 				for syn in range(0,len(hNode.synapses)):
-					#if hNode.synapses[syn].node_d is hNode:
-					adjustment = errorHidden[syn] * hNode.synapses[syn].weight
-					hNode.synapses[syn].weight -= training_rate * adjustment
+					if hNode.synapses[syn].node_d is hNode:
+						adjustment = errorHidden[syn] * hNode.synapses[syn].weight
+						hNode.synapses[syn].weight -= training_rate * adjustment
 
 
 
