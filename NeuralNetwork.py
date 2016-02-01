@@ -73,7 +73,6 @@ class NeuralNetwork:
 			errorPerPair = output[i] - classification
 			
 			#For each synapse going from hidden to the single output node
-
 			errorPerSynapse = []
 			for j in range(0,len(self.nodesOutput[0].synapses)):
 				errorPerSynapse.append(sigmoidDeriv(self.nodesOutput[0].value) * errorPerPair)
@@ -81,7 +80,6 @@ class NeuralNetwork:
 			#print(errorPerSynapse)
 
 			#Hidden Layer
-
 			errorHidden = []
 			for node in self.nodesHidden:
 				sum = 0.0
@@ -113,7 +111,7 @@ class NeuralNetwork:
 					plt.plot([input[item][0]], [input[item][1]], 'ro')
 				squaredError += 0.5*(output[item] - self.classify(input[item])) ** 2
 
-			print(percent/len(input))
-			plt.show()
+		print(percent/len(input))
+		plt.show()
 				
-			return squaredError
+		return squaredError
