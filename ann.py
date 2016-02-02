@@ -74,14 +74,11 @@ ann = NeuralNetwork(numInput, numHidden, numOutput)
 ann.setup()
 
 # run backprop to train the network with the training set
-for x in range(0,2000):
-	ann.backPropagation(input[0:h_num], output[0:h_num], 1)
+for x in range(0,10000):
+	if x%100 is 0:
+		print(ann.backPropagation(input[0:h_num], output[0:h_num], .00000005))
+	else:
+		ann.backPropagation(input[0:h_num], output[0:h_num], .00000005)
 	
 # test against rest of data
 print(round(ann.calculateError(input[h_num+1:len(input)-1],output[h_num+1:len(output)-1])*100, 3), "% error")
-	
-	
-
-# for line in input:
-# 	#print(line)
-# 	classify(line, nodesInput, nodesHidden, nodesOutput)
