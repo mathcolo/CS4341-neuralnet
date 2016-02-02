@@ -6,7 +6,9 @@ February 1, 2016
 
 	This is our project 2, the artificial neural network, for CS4341. We coded with Python 3.5 syntax, and used the following dependencies:
 
+		- Python 3.5 !
 		- numpy
+		- Matplotlib
 
 *** USAGE ***
 
@@ -22,6 +24,12 @@ February 1, 2016
 
 
 
-*** FUNCTIONALITY ***
+*** IMPORTANT FILES ***
 
-	
+	ann.py - main file for our project
+	NeuralNetwork.py - file containing the NeuralNetwork class for our project
+	node.py - file containing the Node class for our project
+	synapse.py - file containing the Synapse class for our project
+
+	hw5data.txt - the original class-provided test data
+	Data[1-5].txt - shufflings of the original class-provided test data
