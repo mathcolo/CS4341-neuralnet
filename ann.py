@@ -62,6 +62,8 @@ filename, numHidden, holdout = parseInput(sys.argv)
 input, output = readFile(filename)
 #print(input)
 
+#numpy.random.seed(1)
+
 numInput = 2
 #numHidden ^
 numOutput = 1
